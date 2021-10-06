@@ -4,17 +4,24 @@ alert("Hola, bienvenid@ a la calculadora.")
 
 let repetir = true;
 let numeros;
+let op;
+
+function pedirValorarOperando(op)
+{
+    op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
+    op = op.trim();
+
+    while (op !== '+' && op !== '-' && op !== '*' && op !== '/') {
+        alert(" \" " + op + " \" " + " No es un operando válido.")
+        op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
+        op = op.trim();
+    }
+    return op;
+}
 
 while (repetir) {
 
-    let operacion = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
-    operacion = operacion.trim();
-
-    while (operacion !== '+' && operacion !== '-' && operacion !== '*' && operacion !== '/') {
-        alert(" \" " + operacion + " \" " + " No es un operando válido.")
-        operacion = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
-        operacion = operacion.trim();
-    }
+    op = pedirValorarOperando(op);
 
     let num1 = null;
     let num2 = null;
@@ -23,6 +30,9 @@ while (repetir) {
     do {
         num1 = null;
         num2 = null;
+        sonNumeros = false;
+        let nums = function(sonNumeros)
+        {
         numeros = prompt("Introduzca 2 numeros separados por un espacio");
         numeros = numeros.split(" ");
         for (let i = 0; i < numeros.length; i++) {
@@ -51,29 +61,34 @@ while (repetir) {
             alert("Introduce numeros")
             sonNumeros=false;
         }
+        return sonNumeros;
+        }
+    } while (!nums);
 
-    } while (!sonNumeros);
-
-    let resultado = 0;
-    switch (operacion) {
+    let sum = (num1, num2) => num1 + num2;
+    let res = (num1, num2) => num1 - num2;
+    let mul = (num1, num2) => num1 * num2;
+    let div = (num1, num2) => num1 / num2;
+    
+    switch (op) {
         case '+':
-            resultado = Number(num1) + Number(num2);
+            alert(sum ( num1, num2) );
             break;
 
         case '-':
-            resultado = Number(num1) - Number(num2);
+            alert(res ( num1, num2) );
             break;
 
         case '*':
-            resultado = Number(num1) * Number(num2);
+            alert(mul ( num1, num2) );
             break;
 
         case '/':
-            resultado = Number(num1) / Number(num2);
+            alert(div ( num1, num2) );
             break;
 
     }
-    alert(resultado);
+    
 
     repetir = confirm("¿Quieres realizar otra operación?");
 }
