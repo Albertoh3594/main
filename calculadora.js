@@ -3,12 +3,15 @@
 alert("Hola, bienvenid@ a la calculadora.")
 
 let repetir = true;
-let numeros;
+let nums = false;
 let op;
+let operacion;
+let numeros;
+let operandos;
 let num1 = null;
 let num2 = null;
 
-function pedirValorarOperando() {
+function pedirValidarOperando() {
     op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
     op = op.trim();
 
@@ -19,69 +22,98 @@ function pedirValorarOperando() {
     }
 }
 
-function pedirValorarNumeros() {
-    
+function pedirValidarNumeros () {
+
     num1 = null;
     num2 = null;
-    numeros = prompt("Introduzca 2 numeros separados por un espacio");
-    numeros = numeros.split(" ");
-    for (let i = 0; i < numeros.length; i++) {
 
-        if (numeros[i] !== '') {
-            if (num1 == null) {
-                num1 = numeros[i];
-            } else {
-                num2 = numeros[i];
+    while (!nums) {
+
+        numeros = prompt("Introduzca 2 numeros separados por un espacio");
+        numeros = numeros.split(" ");
+
+        for (let i = 0; i < numeros.length; i++) {
+
+            if (numeros[i] !== '') {
+                if (num1 == null) {
+                    num1 = numeros[i];
+                } else {
+                    num2 = numeros[i];
+                }
             }
         }
-    }
-    if (!isNaN(Number(num1)) && !isNaN(Number(num2))) {
-        if (num1 == null || num2 == null) {
-            return false;
+        if (!isNaN(Number(num1)) && !isNaN(Number(num2))) {
+            if (num1 == null || num2 == null) {
+                return false;
+            } else {
+                num1 = Number(num1);
+                num2 = Number(num2);
+                return true;
+            }
         } else {
-            num1 = Number(num1);
-            num2 = Number(num2);
-            return true;
+            num1 = null;
+            num2 = null;
+            alert("Introduce numeros");
+            return false;
         }
-    } else {
-        num1 = null;
-        num2 = null;
-        alert("Introduce numeros");
-        return false;
     }
+    return numeros;
 }
 
 while (repetir) {
 
-    pedirValorarOperando();
-    let nums = pedirValorarNumeros();
+    pedirValidarOperando();
+    operandos = pedirValidarNumeros();
 
-    while(!nums) {
-        nums = pedirValorarNumeros();
+    let calculadora = {
+
+        num1: '',
+        num2: '',
+        operacion: '',
+
+        sum() {
+            lastResult = (Number(this.num1) + Number(this.num1));
+            alert(lastResult);
+        },
+        
+        res() {
+            lastResult = (Number(this.num1) - Number(this.num1));
+            alert(lastResult);
+        },
+
+        mul() {
+            lastResult = (Number(this.num1) * Number(this.num1));
+            alert(lastResult);
+        },
+
+        div() {
+            lastResult = (Number(this.num1) / Number(this.num1));
+            alert(lastResult);
+        },
     }
+
 
     switch (op) {
         case '+':
-            let sum = (num1, num2) => num1 + num2;
-            alert(sum(num1, num2));
+            calculadora.sum();
+            lastResult = sum;
             break;
 
         case '-':
-            let res = (num1, num2) => num1 - num2;
-            alert(res(num1, num2));
+            calculadora.res();
+            lastResult = res;
             break;
 
         case '*':
-            let mul = (num1, num2) => num1 * num2;
-            alert(mul(num1, num2));
+            calculadora.mul();
             break;
 
         case '/':
-            let div = (num1, num2) => num1 / num2;
-            alert(div(num1, num2));
+            calculadora.div();
             break;
 
     }
+
 
 
     repetir = confirm("¿Quieres realizar otra operación?");
