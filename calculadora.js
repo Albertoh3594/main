@@ -1,120 +1,153 @@
 'use strict'
 
-alert("Hola, bienvenid@ a la calculadora.")
-
 let repetir = true;
-let nums = false;
 let op;
-let operacion;
-let numeros;
-let operandos;
-let num1 = null;
-let num2 = null;
+let num1 = '';
+let num2 = '';
 
-function pedirValidarOperando() {
-    op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
-    op = op.trim();
+class Calculadora {
 
-    while (op !== '+' && op !== '-' && op !== '*' && op !== '/') {
-        alert(" \" " + op + " \" " + " No es un operando válido.")
-        op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
-        op = op.trim();
+    lastResult = 0;
+
+
+    sum(n1, n2) {
+        this.lastResult = n1 + n2;
+        alert("El resultado de la suma es: " + this.lastResult);
+    };
+
+    res(n1, n2) {
+        this.lastResult = n1 - n2;
+        alert("El resultado de la resta es: " + this.lastResult);
+    };
+
+    mul(n1, n2) {
+        this.lastResult = n1 * n2;
+        alert("El resultado de la multiplicación es: " + this.lastResult);
+    };
+
+    div(n1, n2) {
+        this.lastResult = n1 / n2;
+        alert("El resultado de la division es: " + this.lastResult);
+    };
+}
+
+class ErrorOper extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "ErrorOper";
+    }
+}
+class ErrorNums extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "ErrorNums";
     }
 }
 
-function pedirValidarNumeros () {
+let calculadora = new Calculadora;
 
-    num1 = null;
-    num2 = null;
+function pedirValidarOperacion() {
 
-    while (!nums) {
+    try {
+        do {
+            op = prompt("¿Que operación quieres realizar? ( '+', '-', '*' o '/' )");
+            op = op.trim();
 
-        numeros = prompt("Introduzca 2 numeros separados por un espacio");
-        numeros = numeros.split(" ");
+            if (op !== '+' && op !== '-' && op !== '*' && op !== '/') {
+                throw new ErrorOper(" \" " + op + " \" " + " No es un operando válido.");
+            }
+        } while (op !== '+' && op !== '-' && op !== '*' && op !== '/');
 
-        for (let i = 0; i < numeros.length; i++) {
+    } catch (error) {
+        if (error.name === "ErrorOper") {
+            alert(error.message);
+            pedirValidarOperacion();
+        }
+    }
+}
 
-            if (numeros[i] !== '') {
-                if (num1 == null) {
-                    num1 = numeros[i];
+let pedirValidarNumeros = function() {
+    try {
+        num1 = '';
+        num2 = '';
+        let salir = false;
+
+        while (!salir) {
+            let operadores = prompt('Introduce los operadores separados por espacio', '');
+
+            let i = 0;
+            for (; i < operadores.length; i++) {
+                if (operadores[i] === 'R' || operadores[i] === 'r') {
+                    num1 = calculadora.lastResult;
+                    break;
+                }
+                if (operadores[i] !== ' ') {
+                    num1 = operadores[i];
                 } else {
-                    num2 = numeros[i];
+                    if (num1 !== '') {
+                        break;
+                    }
                 }
             }
-        }
-        if (!isNaN(Number(num1)) && !isNaN(Number(num2))) {
-            if (num1 == null || num2 == null) {
-                return false;
-            } else {
-                num1 = Number(num1);
-                num2 = Number(num2);
-                return true;
+            i++;
+
+            for (; i < operadores.length; i++) {
+                if (operadores[i] === 'R' || operadores[i] === 'r') {
+                    num2 = calculadora.lastResult;
+                    break;
+                }
+                if (operadores[i] !== ' ') {
+                    num2 = operadores[i];
+                } else {
+                    if (num2 !== '') {
+                        break;
+                    }
+                }
             }
-        } else {
-            num1 = null;
-            num2 = null;
-            alert("Introduce numeros");
-            return false;
+
+            num1 = Number(num1);
+            num2 = Number(num2);
+
+            if (isNaN(num1) || isNaN(num2)) {
+                salir = false;
+                throw new ErrorNums('Tienes que introducir números');
+            } else {
+                salir = true;
+            }
+        }
+    } catch (error) {
+        if (error.name === "ErrorNums") {
+            alert(error.message);
+            pedirValidarNumeros();
         }
     }
-    return numeros;
 }
+
+alert("Hola, bienvenid@ a la calculadora.")
 
 while (repetir) {
 
-    pedirValidarOperando();
-    operandos = pedirValidarNumeros();
-
-    let calculadora = {
-
-        num1: '',
-        num2: '',
-        operacion: '',
-
-        sum() {
-            lastResult = (Number(this.num1) + Number(this.num1));
-            alert(lastResult);
-        },
-        
-        res() {
-            lastResult = (Number(this.num1) - Number(this.num1));
-            alert(lastResult);
-        },
-
-        mul() {
-            lastResult = (Number(this.num1) * Number(this.num1));
-            alert(lastResult);
-        },
-
-        div() {
-            lastResult = (Number(this.num1) / Number(this.num1));
-            alert(lastResult);
-        },
-    }
-
+    pedirValidarOperacion();
+    pedirValidarNumeros();
 
     switch (op) {
         case '+':
-            calculadora.sum();
-            lastResult = sum;
+            calculadora.sum(num1, num2);
             break;
 
         case '-':
-            calculadora.res();
-            lastResult = res;
+            calculadora.res(num1, num2);
             break;
 
         case '*':
-            calculadora.mul();
+            calculadora.mul(num1, num2);
             break;
 
         case '/':
-            calculadora.div();
+            calculadora.div(num1, num2);
             break;
 
     }
-
-
 
     repetir = confirm("¿Quieres realizar otra operación?");
 }
